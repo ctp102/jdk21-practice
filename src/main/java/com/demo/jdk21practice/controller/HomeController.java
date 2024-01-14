@@ -27,9 +27,10 @@ public class HomeController {
         }
 
         // pattern matching : jdk 21
+        // + record pattern
         String message = switch (loan) {
             case SecuredLoan sl -> name + "님은 무이자";
-            case UnSecuredLoan usl -> name + "님은 이율이 " + usl.interest();
+            case UnSecuredLoan(int interest) -> name + "님은 이율이 " + interest;
         };
 
         return message;
