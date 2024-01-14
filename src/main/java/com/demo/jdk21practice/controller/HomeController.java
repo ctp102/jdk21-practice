@@ -1,6 +1,5 @@
 package com.demo.jdk21practice.controller;
 
-import org.apache.logging.log4j.message.Message;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,18 +7,42 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HomeController {
 
-    @GetMapping("/greeting")
-    public String greeting(@RequestParam String name) {
+    @GetMapping("/name")
+    public String name(@RequestParam String name) {
         // arrow, inline : jdk 14
         Loan loan = switch (name) {
             case "jhcho" -> new SecuredLoan();
             default -> new UnSecuredLoan(5);
         };
 
+        // pattern matching 이전 기존 코드
+        String beforeMessage = null;
+
+        if (loan instanceof SecuredLoan) {
+            SecuredLoan sl = (SecuredLoan) loan;
+            beforeMessage = name + "님은 무이자";
+        } else if (loan instanceof UnSecuredLoan) {
+            UnSecuredLoan usl = (UnSecuredLoan) loan;
+            beforeMessage = name + "님은 이율이 " + usl.interest();
+        }
+
         // pattern matching : jdk 21
         String message = switch (loan) {
             case SecuredLoan sl -> name + "님은 무이자";
             case UnSecuredLoan usl -> name + "님은 이율이 " + usl.interest();
+        };
+
+        return message;
+    }
+
+    @GetMapping("/score")
+    public String score(@RequestParam Integer score) {
+        // when
+        String message = switch (score) {
+            case 100 -> "Prefect!";
+            case Integer i when i >= 90 -> "Very Good!";
+            case Integer i when i >= 80 -> "Good!";
+            default -> "Bad";
         };
 
         return message;
