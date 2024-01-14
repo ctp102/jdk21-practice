@@ -1,5 +1,7 @@
 package com.demo.jdk21practice.domain;
 
-public record Student(String name) {
+public record Student(
+        String name, int age
+) {
 
 }
